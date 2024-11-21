@@ -1,20 +1,16 @@
 pipeline {
     agent any
-    environment {
-        DOCKER_IMAGE = 'flaskapp'
-        DOCKER_REGISTRY = 'selcia25'
-        DOCKER_TAG = 'latest'
-    }
+   
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/selcia25/jenkins-container.git'
+                git branch: 'main', url: 'https://github.com/selcia25/jenkins-container.git'
             }
         }
         stage('Build') {
             steps {
                 script {
-                    sh 'docker build -t $DOCKER_REGISTRY/$DOCKER_IMAGE:$DOCKER_TAG .'
+                    sh 'docker build -t selcia25/flaskapp .'
                 }
             }
         }
@@ -25,7 +21,7 @@ pipeline {
                     // sh 'docker push $DOCKER_REGISTRY/$DOCKER_IMAGE:$DOCKER_TAG'
 
                     // Optionally, deploy the container to a server or cloud
-                    sh 'docker run -d -p 5000:5000 $DOCKER_REGISTRY/$DOCKER_IMAGE:$DOCKER_TAG'
+                    sh 'docker run -p 5000:5000 selcia25/flaskapp'
                 }
             }
         }
