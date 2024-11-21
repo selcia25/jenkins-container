@@ -7,6 +7,11 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/selcia25/jenkins-container.git'
             }
         }
+        stage('Connect'){
+            steps {
+                sh 'docker login -u selcia25 -p dckr_pat_KYGhDm1IF59UggbfKXddplfTDY8'
+            }
+        }
         stage('Build') {
             steps {
                 script {
