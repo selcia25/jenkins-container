@@ -1,39 +1,31 @@
 pipeline {
     agent any
-   
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/selcia25/jenkins-container.git'
+                git url: 'https://github.com/selcia25/jenkins-container.git', branch: 'main'
             }
         }
-        stage('Connect'){
+        stage('Connect') {
             steps {
-                sh 'docker login -u selcia25 -p dckr_pat_KYGhDm1IF59UggbfKXddplfTDY8'
+                sh '''
+                echo "dckr_pat_KYGhDm1IF59UggbfKXddplfTDY8" | docker login -u selcia25 --password-stdin
+                '''
             }
         }
         stage('Build') {
             steps {
-                script {
-                    sh 'docker build -t selcia25/flaskapp .'
-                }
+                sh 'docker build -t selcia25/app .'
             }
         }
         stage('Deploy') {
             steps {
-                script {
-                    // Optionally, push the Docker image to DockerHub or another registry
-                    // sh 'docker push $DOCKER_REGISTRY/$DOCKER_IMAGE:$DOCKER_TAG'
-
-                    // Optionally, deploy the container to a server or cloud
-                    sh 'docker run -p 5000:5000 selcia25/flaskapp'
-                }
+                sh 'docker run -d -p 8080:80 selcia25/app'
             }
         }
     }
     post {
         always {
-            // Cleanup any resources or containers
             sh 'docker system prune -f'
         }
     }
