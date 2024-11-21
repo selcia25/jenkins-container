@@ -20,13 +20,8 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                sh 'docker run -d -p 8080:80 selcia25/app'
+                sh 'docker run -d -p 5000:5000 selcia25/app'
             }
-        }
-    }
-    post {
-        always {
-            sh 'docker system prune -f'
         }
     }
 }
